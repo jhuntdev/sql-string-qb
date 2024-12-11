@@ -1,0 +1,42 @@
+{
+  "name": "qb-js",
+  "version": "0.0.1",
+  "description": "A simple tool for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.",
+  "homepage": "https://github.com/jhuntdev/qb-js",
+  "keywords": [
+    "qb",
+    "sql",
+    "mysql",
+    "postgres",
+    "query builder",
+    "javascript",
+    "typescript",
+    "nodejs",
+    "node.js",
+    "deno",
+    "bun"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jhuntdev/qb-js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "watch": "tsc -w",
+    "test": "mocha ./test"
+  },
+  "files": [
+    "dist/",
+    "README.md",
+    "LICENSE"
+  ],
+  "author": "JHunt <hello@jhunt.dev>",
+  "license": "MIT",
+  "devDependencies": {
+    "mocha": "11.0.1",
+    "typescript": "5.7.2"
+  }
+}

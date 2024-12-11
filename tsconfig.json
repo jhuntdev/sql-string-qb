@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+      "target": "ES5",                          // Target ECMAScript version 5 for broad compatibility
+      "module": "ESNext",                          // Output ES modules for modern environments
+      "moduleResolution": "node",               // Resolve modules like Node.js does
+      "lib": ["ESNext"],                        // Include the latest ECMAScript features
+      "strict": true,                           // Enable all strict type-checking options
+      "esModuleInterop": true,                  // Enable interoperability with CommonJS modules
+      "skipLibCheck": false,                    // Skip type checking of declaration files for faster builds
+      "forceConsistentCasingInFileNames": true, // Ensure consistent casing of filenames
+      "outDir": "./dist",                       // Output directory for compiled JavaScript
+      "declaration": true,                      // Generate .d.ts files for type definitions
+      "declarationMap": false,                  // Generate source maps for .d.ts files
+      "isolatedModules": true,                  // Ensure each file can be transpiled independently
+      "allowJs": true,                          // Allow JavaScript files to be included
+      "skipDefaultLibCheck": true,              // Skip checking of default library files
+      "noImplicitAny": true,
+      "noImplicitReturns": true,
+      "noImplicitThis": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "allowSyntheticDefaultImports": true
+    },
+    "include": [
+      "src/**/*.ts"                             // Include all TypeScript files in the 'src' folder
+    ],
+    "exclude": [
+      "node_modules"                            // Exclude node_modules from being compiled
+    ]
+  }
+  
