@@ -1,4 +1,4 @@
-# QB🏈
+# SQLQB🏈
 
 ## A simple tool for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.
 
@@ -8,21 +8,21 @@ WARNING: Exercise the same safety precautions as you would normally when writing
 
 ## Installation
 
-Install QB🏈 from npm
+Install SQLQB🏈 from npm
 
 With npm:
 ```bash
-npm install --save qb-js
+npm install --save sqlqb
 ```
 or using yarn:
 ```bash
-yarn add qb-js
+yarn add sqlqb
 ```
 
 ## Usage
 
 ```javascript
-import qb from 'qb-js' 
+import qb from 'sqlqb' 
 
 // Basic
 const [sql] = qb(

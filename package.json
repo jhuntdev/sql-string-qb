@@ -1,8 +1,8 @@
 {
-  "name": "qb-js",
+  "name": "sqlqb",
   "version": "0.0.1",
   "description": "A simple tool for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.",
-  "homepage": "https://github.com/jhuntdev/qb-js",
+  "homepage": "https://github.com/jhuntdev/sqlqb",
   "keywords": [
     "qb",
     "sql",
@@ -21,7 +21,7 @@
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jhuntdev/qb-js"
+    "url": "https://github.com/jhuntdev/sqlqb"
   },
   "scripts": {
     "build": "tsc -b",
