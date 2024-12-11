@@ -4,7 +4,7 @@
 
 Inspired by classNames and Drizzle, this small but powerful library allows you to elegantly craft complex SQL statements without compromising readability or performance. The `qb.t` tagged template function allows you to use template literals to automatically break out variables for escaping, prepared statements, etc.
 
-_WARNING: Exercise the same safety precautions as you normally would when writing SQL._
+_WARNING: Exercise the same safety precautions you normally would when writing SQL._
 
 ## Installation
 
