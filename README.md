@@ -2,7 +2,7 @@
 
 ## "A simple JavaScript/TypeScript library for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.
 
-Inspired by classNames and several SQL tagged template string libraries, this small but powerful SQL query builder allows you to elegantly craft complex SQL statements without compromising code readability or performance. Its output is an `SqlString` object which drops right into popular SQL database clients. The ``qb.t`...`` function automatically breaks out values from template literals and can be unsed standalone or as an argument in `qb()`.
+Inspired by classNames and several SQL tagged template string libraries, this small but powerful SQL query builder allows you to elegantly craft complex SQL statements without compromising code readability or performance. Its output is an `SqlString` object which drops right into popular SQL database clients. The ``qb.t`...` `` function automatically breaks out values from template literals and can be unsed standalone or as an argument in `qb()`.
 
 _WARNING: Exercise the same safety precautions you normally would when writing SQL. Variables outside of the `qb.t` function will go directly into the query and should be escaped first._
 
