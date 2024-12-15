@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-      "target": "ES5",                          // Target ECMAScript version 5 for broad compatibility
+      "target": "ES2021",                       // Target ECMAScript version 5 for broad compatibility
       "module": "ESNext",                       // Output ES modules for modern environments
       "moduleResolution": "node",               // Resolve modules like Node.js does
       "lib": ["ESNext"],                        // Include the latest ECMAScript features
