@@ -4,7 +4,7 @@
 	https://github.com/jhuntdev/sql-string-qb
 */
 
-export class SqlString {
+class SqlString {
   private strings: string[];
   values: any[];
 
@@ -57,7 +57,7 @@ const append = (strings: string[], newStrings: string[]) => {
   }
 }
 
-export const qb = (...args: any[]): SqlString => {
+const qb = (...args: any[]): SqlString => {
   let strings: string[] = [];
   const values: any[] = [];
   for (let i = 0; i < args.length; i++) {

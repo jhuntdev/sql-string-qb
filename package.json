@@ -1,6 +1,6 @@
 {
   "name": "sql-string-qb",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A simple JavaScript/TypeScript library for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.",
   "homepage": "https://github.com/jhuntdev/sql-string-qb",
   "keywords": [
@@ -8,7 +8,6 @@
     "sql",
     "mysql",
     "mssql",
-    "sqlite",
     "oracle",
     "postgres",
     "query builder",
@@ -19,6 +18,11 @@
     "deno",
     "bun"
   ],
+  "exports": {
+    "types": "dist/index.d.ts",
+    "require": "dist/index.cjs",
+    "import": "dist/index.js"
+  },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "type": "module",
@@ -27,7 +31,7 @@
     "url": "https://github.com/jhuntdev/sql-string-qb"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && rollup dist/index.js --format=cjs --file=dist/index.cjs",
     "watch": "tsc -w",
     "test": "mocha ./test"
   },
@@ -40,6 +44,7 @@
   "license": "MIT",
   "devDependencies": {
     "mocha": "11.0.1",
+    "rollup": "^4.28.1",
     "typescript": "5.7.2"
   }
 }

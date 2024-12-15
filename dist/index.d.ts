@@ -3,7 +3,7 @@
     Licensed under the MIT License (MIT)
     https://github.com/jhuntdev/sql-string-qb
 */
-export declare class SqlString {
+declare class SqlString {
     private strings;
     values: any[];
     constructor(strings: string[], values?: any[]);
@@ -14,7 +14,7 @@ export declare class SqlString {
     get query(): string;
     [Symbol.iterator](): Generator<string | any[], void, unknown>;
 }
-export declare const qb: {
+declare const qb: {
     (...args: any[]): SqlString;
     t(strings: TemplateStringsArray, ...values: any[]): SqlString;
     set(keyValues: {
