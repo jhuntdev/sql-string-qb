@@ -1,6 +1,6 @@
 {
   "name": "sql-string-qb",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "A simple JavaScript/TypeScript library for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.",
   "homepage": "https://github.com/jhuntdev/sql-string-qb",
   "keywords": [
@@ -19,9 +19,11 @@
     "bun"
   ],
   "exports": {
-    "types": "dist/index.d.ts",
-    "require": "dist/index.cjs",
-    "import": "dist/index.js"
+    ".": {
+      "types": "dist/index.d.ts",
+      "require": "dist/index.cjs",
+      "import": "dist/index.js"
+    }
   },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
