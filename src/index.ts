@@ -79,8 +79,8 @@ export const qb = (...args: any[]): SqlString => {
   return new SqlString(strings, values);
 }
 
-qb.t = (strings:string[], ...values:any[]) => {
-  return new SqlString(strings, values);
+qb.t = (strings:TemplateStringsArray, ...values:any[]) => {
+  return new SqlString(strings.map((s) => String(s)), values);
 }
 
 qb.set = (keyValues:{[key:string]:any}) => {

@@ -16,7 +16,7 @@ export declare class SqlString {
 }
 export declare const qb: {
     (...args: any[]): SqlString;
-    t(strings: string[], ...values: any[]): SqlString;
+    t(strings: TemplateStringsArray, ...values: any[]): SqlString;
     set(keyValues: {
         [key: string]: any;
     }): any[][];

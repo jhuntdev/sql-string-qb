@@ -143,7 +143,7 @@ qb.t = function (strings) {
     for (var _i = 1; _i < arguments.length; _i++) {
         values[_i - 1] = arguments[_i];
     }
-    return new SqlString(strings, values);
+    return new SqlString(strings.map(function (s) { return String(s); }), values);
 };
 qb.set = function (keyValues) {
     // SET key1 = $0, key2 = $1
