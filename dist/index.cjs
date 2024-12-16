@@ -6,6 +6,8 @@
     https://github.com/jhuntdev/sql-string-qb
 */
 class SqlString {
+    strings;
+    values;
     constructor(strings, values = []) {
         this.strings = strings;
         this.values = values;

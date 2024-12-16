@@ -27,7 +27,7 @@
     "url": "https://github.com/jhuntdev/sql-string-qb"
   },
   "scripts": {
-    "build": "tsc -b && rollup dist/index.js --format=cjs --file=dist/index.cjs",
+    "build" : "tsc -b && rollup dist/index.js --format=cjs --file=dist/index.cjs && rm dist/tsconfig.tsbuildinfo",
     "watch": "tsc -w",
     "test": "mocha ./test"
   },
