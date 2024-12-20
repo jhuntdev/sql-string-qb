@@ -43,6 +43,7 @@ const query = qb(
 typeof query     // => 'object'
 query.toString() // => 'SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12'
 query.sql        // => 'SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12'
+query.query      // => 'SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12'
 query.text       // => 'SELECT id, name FROM products WHERE category = $1 ORDER BY createdAt DESC LIMIT 12'
 query.statement  // => 'SELECT id, name FROM products WHERE category = :1 ORDER BY createdAt DESC LIMIT 12'
 query.values     // => ['sporting-goods']
