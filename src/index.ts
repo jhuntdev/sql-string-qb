@@ -5,7 +5,7 @@
 */
 
 class SqlString {
-  private strings: string[];
+  strings: string[];
   values: any[];
 
   constructor(strings: string[], values: any[] = []) {
@@ -34,7 +34,7 @@ class SqlString {
 
   // sequelize
   get query() {
-    return this.sql; // this.prepared ? this.text : this.sql
+    return this.sql;
   }
 
   *[Symbol.iterator]() {
@@ -44,12 +44,17 @@ class SqlString {
 }
 
 const append = (strings: string[], newStrings: string[]) => {
+  const stringsLength = strings.length
   if (!newStrings.length) {
     return strings;
-  } else if (strings.length) {
+  } else if (stringsLength) {
+    const allButLastString = strings.slice(0, stringsLength - 1)
+    const lastString = strings[stringsLength - 1]
+    const lastStringChar = lastString.charAt(lastString.length - 1)
+    const firstStringChar = newStrings[0].charAt(0)
     return [
-      ...strings.slice(0, strings.length - 1),
-      strings[strings.length - 1] + ' ' + newStrings[0],
+      ...allButLastString,
+      lastString + (lastStringChar === ' ' || firstStringChar === ' ' || !firstStringChar ? '' : ' ') + newStrings[0],
       ...newStrings.slice(1)
     ];
   } else {
@@ -80,7 +85,33 @@ const qb = (...args: any[]): SqlString => {
 }
 
 qb.t = (strings:TemplateStringsArray, ...values:any[]) => {
-  return new SqlString(strings.map((s) => String(s)), values);
+  let newStrings:string[] = []
+  const newValues:any[] = []
+  let appendNextString:boolean = false;
+  for (let i = 0; i < values.length; i++) {
+    const value = values[i];
+    if (value instanceof SqlString) {
+      newStrings.push(strings[i]);
+      newStrings = append(newStrings, value.strings);
+      newValues.push(...value.values);
+      appendNextString = true;
+    } else {
+      if (appendNextString) {
+        newStrings = append(newStrings, [strings[i]]);
+        appendNextString = false;
+      } else {
+        newStrings.push(strings[i]);
+      }
+      newValues.push(value);
+    }
+  }
+  if (appendNextString) {
+    newStrings = append(newStrings, [strings[strings.length - 1]]);
+    appendNextString = false;
+  } else {
+    newStrings.push(strings[strings.length - 1]);
+  }
+  return new SqlString(newStrings.map((s) => String(s)), newValues);
 }
 
 qb.set = (keyValues:{[key:string]:any}) => {
@@ -89,13 +120,23 @@ qb.set = (keyValues:{[key:string]:any}) => {
   const values = [];
   const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
   const keysLength = keys.length;
+  let endString = '';
   for (let i = 0; i < keysLength; i++) {
     const key = keys[i];
-    strings.push(`${i === 0 ? 'SET ' : ', '}${key} = `);
-    values.push(keyValues[key]);
+    const value = keyValues[key];
+    const baseString = `${i === 0 ? 'SET ' : endString + ', '}${key} = `
+    if (value instanceof SqlString) {
+      strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
+      endString = value.strings[value.strings.length - 1];
+      values.push(...value.values);
+    } else {
+      strings.push(endString + baseString);
+      values.push(value);
+      endString = '';
+    }
   }
-  strings.push('');
-  return [strings, values];
+  strings.push(endString);
+  return new SqlString(strings, values); // [strings, values];
 }
 
 qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]) => {
@@ -106,34 +147,55 @@ qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]) => {
   const keyValues = array[0];
   const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
   const keysLength = keys.length;
+  let endString = '';
   for (let i = 0; i < array.length; i++) {
     if (i === 0) {
       strings.push(`(${keys.join(', ')}) VALUES (`);
     } else {
-      strings.push(`), (`);
+      strings.push(endString + `), (`);
     }
     const item = array[i];
     for (let j = 0; j < keysLength; j++) {
       const key = keys[j];
-      if (j > 0) {
-        strings.push(', ');
+      const value = item[key];
+      const baseString = j > 0 ? endString + ', ' : '';
+      if (value instanceof SqlString) {
+        strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
+        endString = value.strings[value.strings.length - 1];
+        values.push(...value.values);
+      } else {
+        if (j > 0) {
+          strings.push(baseString);
+        }
+        values.push(item[key]);
+        endString = '';
       }
-      values.push(item[key]);
     }
   }
-  strings.push(')');
-  return [strings, values];
+  strings.push(endString + ')');
+  return new SqlString(strings, values); // [strings, values];
 }
 
-qb.in = (values:any[]) =>{
+qb.in = (values:any[]) => {
   // IN ($0, $1)
-  const strings = ['IN ('];
+  const strings = [];
+  const newValues = [];
   const valuesLength = values.length;
-  for (let i = 1; i < valuesLength; i++) {
-    strings.push(', ');
+  let endString = '';
+  for (let i = 0; i < valuesLength; i++) {
+    const baseString = i === 0 ? 'IN (' : endString + ', '
+    const value = values[i];
+    if (value instanceof SqlString) {
+      strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
+      endString = value.strings[value.strings.length - 1];
+      newValues.push(...value.values);
+    } else {
+      strings.push(baseString);
+      newValues.push(value);
+    }
   }
-  strings.push(')');
-  return [strings, values];
+  strings.push(endString + ')');
+  return new SqlString(strings, newValues); // [strings, values];
 }
 
 export default qb;

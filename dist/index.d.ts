@@ -4,7 +4,7 @@
     https://github.com/jhuntdev/sql-string-qb
 */
 declare class SqlString {
-    private strings;
+    strings: string[];
     values: any[];
     constructor(strings: string[], values?: any[]);
     toString(): string;
@@ -19,12 +19,12 @@ declare const qb: {
     t(strings: TemplateStringsArray, ...values: any[]): SqlString;
     set(keyValues: {
         [key: string]: any;
-    }): any[][];
+    }): SqlString;
     values(keyValueArray: {
         [key: string]: any;
     } | {
         [key: string]: any;
-    }[]): any[][];
-    in(values: any[]): any[][];
+    }[]): SqlString;
+    in(values: any[]): SqlString;
 };
 export default qb;
