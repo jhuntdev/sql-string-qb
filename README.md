@@ -2,7 +2,7 @@
 
 ## A simple JavaScript/TypeScript library for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.
 
-Inspired by classNames and several tagged template libraries, this small but powerful SQL query builder allows you to elegantly craft complex SQL statements without compromising code readability or performance. Its output is an object which drops right into popular SQL database clients. The ``qb.t`...` `` function automatically breaks out values from template literals and can be used either on its own or as an argument in `qb()`.
+Inspired by classNames and several tagged template libraries, this small but powerful SQL query builder allows you to elegantly craft complex SQL statements without compromising code readability or performance. Its output is an object which drops right into popular SQL database clients. The `qb.t` function automatically breaks out values from template literals and can be used either on its own or as an argument in `qb()`.
 
 _WARNING: Variables outside of a ``qb.t`...` `` function will go directly into the query and should be escaped first._
 
@@ -53,6 +53,16 @@ mysql.query(query) // Uses query.sql and query.values
 mysql2.query(query) // Uses query.sql and query.values
 sequelize.query(query) // Uses query.query and query.values
 oracledb.execute(query) // Uses query.statement and query.values
+
+// Experimental Helper Functions
+qb.set({
+    column_1: 'value 1',
+    column_2: qb.unescaped('value 2')
+}) // => "SET column_1 = ?, column_2 = 'value 2" ["value1"]
+qb.values({
+    column_1: 'value 1',
+    column_2: qb.unescaped('value 2')
+}) // => "(column_1, column_2) VALUES (?, 'value 2')" ["value1"]
 ```
 
 ## License

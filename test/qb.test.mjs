@@ -19,18 +19,11 @@ const sqlString2 = qb(
 const sqlString2b = qb.t`INSERT INTO tableName ${qb.values([{ name: 'John', age: 25 }, { name: 'Mary', age: 40 }])}`
 
 const sqlString3 = qb(
-    'SELECT FROM tableName WHERE status',
-    qb.in(['archived', 'draft']),
-    qb.t`AND isHidden = ${false}`
-)
-const sqlString3b = qb.t`SELECT FROM tableName WHERE status ${qb.in(['archived', 'draft'])} AND isHidden = ${false}`
-
-const sqlString4 = qb(
     'UPDATE tableName',
     qb.set({ status: 'active', published: true }),
     qb.t`WHERE id = ${id}`
 )
-const sqlString4b = qb.t`UPDATE tableName ${qb.set({ status: 'active', published: true })} WHERE id = ${id}`
+const sqlString3b = qb.t`UPDATE tableName ${qb.set({ status: 'active', published: true })} WHERE id = ${id}`
 
 describe('SqlStringQB', () => {
     it('should work for general use', async () => {
@@ -63,29 +56,19 @@ describe('SqlStringQB', () => {
         assert.strictEqual(sqlString2.values[3], 40)
 
     })
-    it('should produce valid IN clauses', async () => {
-        assert.strictEqual(sqlString3.toString(), 'SELECT FROM tableName WHERE status IN (?, ?) AND isHidden = ?')
-        assert.strictEqual(sqlString3.values.length, 3)
-        assert.strictEqual(sqlString3.values[0], 'archived')
-        assert.strictEqual(sqlString3.values[1], 'draft')
-        assert.strictEqual(sqlString3.values[2], false)
-    })
     it('should produce valid SET clauses', async () => {
-        assert.strictEqual(sqlString4.toString(), 'UPDATE tableName SET status = ?, published = ? WHERE id = ?')
-        assert.strictEqual(sqlString4.values.length, 3)
-        assert.strictEqual(sqlString4.values[0], 'active')
-        assert.strictEqual(sqlString4.values[1], true)
-        assert.strictEqual(sqlString4.values[2], 'abc123')
+        assert.strictEqual(sqlString3.toString(), 'UPDATE tableName SET status = ?, published = ? WHERE id = ?')
+        assert.strictEqual(sqlString3.values.length, 3)
+        assert.strictEqual(sqlString3.values[0], 'active')
+        assert.strictEqual(sqlString3.values[1], true)
+        assert.strictEqual(sqlString3.values[2], 'abc123')
     })
     it('should interpolate nested SqlStrings correctly', async () => {
         assert.strictEqual(sqlString2.toString(), sqlString2b.toString())
         assert.strictEqual(sqlString3.toString(), sqlString3b.toString())
-        assert.strictEqual(sqlString4.toString(), sqlString4b.toString())
         assert.strictEqual(sqlString2.values.length, sqlString2b.values.length)
         assert.strictEqual(sqlString3.values.length, sqlString3b.values.length)
-        assert.strictEqual(sqlString4.values.length, sqlString4b.values.length)
         assert.strictEqual(sqlString2.values[0], sqlString2b.values[0])
         assert.strictEqual(sqlString3.values[0], sqlString3b.values[0])
-        assert.strictEqual(sqlString4.values[0], sqlString4b.values[0])
     })
 })

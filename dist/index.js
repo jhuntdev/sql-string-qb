@@ -107,7 +107,8 @@ qb.t = (strings, ...values) => {
     }
     return new SqlString(newStrings.map((s) => String(s)), newValues);
 };
-qb.set = (keyValues) => {
+qb.unescaped = (sql) => new SqlString([sql]);
+const keyValueList = (keyValues, prefix = '') => {
     const strings = [];
     const values = [];
     const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
@@ -116,7 +117,7 @@ qb.set = (keyValues) => {
     for (let i = 0; i < keysLength; i++) {
         const key = keys[i];
         const value = keyValues[key];
-        const baseString = `${i === 0 ? 'SET ' : endString + ', '}${key} = `;
+        const baseString = `${i === 0 ? (prefix ? prefix + ' ' : '') : endString + ', '}${key} = `;
         if (value instanceof SqlString) {
             strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
             endString = value.strings[value.strings.length - 1];
@@ -131,6 +132,7 @@ qb.set = (keyValues) => {
     strings.push(endString);
     return new SqlString(strings, values);
 };
+qb.set = (keyValues) => keyValueList(keyValues, 'SET');
 qb.values = (keyValueArray) => {
     const strings = [];
     const values = [];
@@ -167,26 +169,5 @@ qb.values = (keyValueArray) => {
     }
     strings.push(endString + ')');
     return new SqlString(strings, values);
-};
-qb.in = (values) => {
-    const strings = [];
-    const newValues = [];
-    const valuesLength = values.length;
-    let endString = '';
-    for (let i = 0; i < valuesLength; i++) {
-        const baseString = i === 0 ? 'IN (' : endString + ', ';
-        const value = values[i];
-        if (value instanceof SqlString) {
-            strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
-            endString = value.strings[value.strings.length - 1];
-            newValues.push(...value.values);
-        }
-        else {
-            strings.push(baseString);
-            newValues.push(value);
-        }
-    }
-    strings.push(endString + ')');
-    return new SqlString(strings, newValues);
 };
 export default qb;

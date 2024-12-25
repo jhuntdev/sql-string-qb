@@ -17,6 +17,7 @@ declare class SqlString {
 declare const qb: {
     (...args: any[]): SqlString;
     t(strings: TemplateStringsArray, ...values: any[]): SqlString;
+    unescaped(sql: string): SqlString;
     set(keyValues: {
         [key: string]: any;
     }): SqlString;
@@ -25,6 +26,5 @@ declare const qb: {
     } | {
         [key: string]: any;
     }[]): SqlString;
-    in(values: any[]): SqlString;
 };
 export default qb;
