@@ -4,7 +4,7 @@
 
 Inspired by classNames and several tagged template libraries, this small but powerful SQL query builder allows you to elegantly craft complex SQL statements without compromising code readability or performance. Its output is an object which drops right into popular SQL database clients. The `qb.t` function automatically breaks out values from template literals and can be used either on its own or as an argument in `qb()`.
 
-_WARNING: Variables outside of a ``qb.t`...` `` function will go directly into the query and should be escaped first._
+_WARNING! Variables outside a `qb.t` function will go directly into the query and should be escaped first._
 
 ## Installation
 
@@ -40,13 +40,13 @@ const query = qb(
     'LIMIT 12'
 )
 
-typeof query     // => 'object'
-query.toString() // => 'SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12'
-query.sql        // => 'SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12'
-query.query      // => 'SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12'
-query.text       // => 'SELECT id, name FROM products WHERE category = $1 ORDER BY createdAt DESC LIMIT 12'
-query.statement  // => 'SELECT id, name FROM products WHERE category = :1 ORDER BY createdAt DESC LIMIT 12'
-query.values     // => ['sporting-goods']
+typeof query     // => "object"
+query.toString() // => "SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12"
+query.sql        // => "SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12"
+query.query      // => "SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12"
+query.text       // => "SELECT id, name FROM products WHERE category = $1 ORDER BY createdAt DESC LIMIT 12"
+query.statement  // => "SELECT id, name FROM products WHERE category = :1 ORDER BY createdAt DESC LIMIT 12"
+query.values     // => ["sporting-goods"]
 
 pg.query(query) // Uses query.text and query.values
 mysql.query(query) // Uses query.sql and query.values
@@ -58,7 +58,7 @@ oracledb.execute(query) // Uses query.statement and query.values
 qb.set({
     column_1: 'value 1',
     column_2: qb.unescaped('value 2')
-}) // => "SET column_1 = ?, column_2 = 'value 2" ["value1"]
+}) // => "SET column_1 = ?, column_2 = 'value 2'" ["value1"]
 qb.values({
     column_1: 'value 1',
     column_2: qb.unescaped('value 2')
