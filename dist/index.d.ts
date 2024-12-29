@@ -26,5 +26,6 @@ declare const qb: {
     } | {
         [key: string]: any;
     }[]): SqlString;
+    in(values: any[]): SqlString;
 };
 export default qb;

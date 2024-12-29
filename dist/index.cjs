@@ -172,5 +172,26 @@ qb.values = (keyValueArray) => {
     strings.push(endString + ')');
     return new SqlString(strings, values);
 };
+qb.in = (values) => {
+    const strings = [];
+    const newValues = [];
+    const valuesLength = values.length;
+    let endString = '';
+    for (let i = 0; i < valuesLength; i++) {
+        const baseString = i === 0 ? 'IN (' : endString + ', ';
+        const value = values[i];
+        if (value instanceof SqlString) {
+            strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
+            endString = value.strings[value.strings.length - 1];
+            newValues.push(...value.values);
+        }
+        else {
+            strings.push(baseString);
+            newValues.push(value);
+        }
+    }
+    strings.push(endString + ')');
+    return new SqlString(strings, newValues);
+};
 
 module.exports = qb;

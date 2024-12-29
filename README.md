@@ -63,6 +63,10 @@ qb.values({
     column_1: 'value 1',
     column_2: qb.unescaped('value 2')
 }) // => "(column_1, column_2) VALUES (?, 'value 2')" ["value1"]
+qb.in([
+    'value 1',
+    qb.unescaped('value 2')
+]) // => "IN (?, 'value 2')" ["value1"]
 ```
 
 ## License

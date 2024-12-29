@@ -60,7 +60,7 @@ const append = (strings: string[], newStrings: string[]) => {
   } else {
     return newStrings;
   }
-}
+};
 
 const qb = (...args: any[]): SqlString => {
   let strings: string[] = [];
@@ -82,7 +82,7 @@ const qb = (...args: any[]): SqlString => {
     }
   }
   return new SqlString(strings, values);
-}
+};
 
 qb.t = (strings:TemplateStringsArray, ...values:any[]) => {
   let newStrings:string[] = []
@@ -112,9 +112,9 @@ qb.t = (strings:TemplateStringsArray, ...values:any[]) => {
     newStrings.push(strings[strings.length - 1]);
   }
   return new SqlString(newStrings.map((s) => String(s)), newValues);
-}
+};
 
-qb.unescaped = (sql:string) => new SqlString([sql])
+qb.unescaped = (sql:string) => new SqlString([sql]);
 
 const keyValueList = (keyValues:{[key:string]:any}, prefix:string = '') => {
   // PREFIX key1 = $0, key2 = $1
@@ -139,7 +139,7 @@ const keyValueList = (keyValues:{[key:string]:any}, prefix:string = '') => {
   }
   strings.push(endString);
   return new SqlString(strings, values); // [strings, values];
-}
+};
 
 qb.set = (keyValues:{[key:string]:any}) => keyValueList(keyValues, 'SET');
 
@@ -178,6 +178,28 @@ qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]) => {
   }
   strings.push(endString + ')');
   return new SqlString(strings, values); // [strings, values];
-}
+};
+
+qb.in = (values:any[]) => {
+  const strings = [];
+  const newValues = [];
+  const valuesLength = values.length;
+  let endString = '';
+  for (let i = 0; i < valuesLength; i++) {
+      const baseString = i === 0 ? 'IN (' : endString + ', ';
+      const value = values[i];
+      if (value instanceof SqlString) {
+          strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
+          endString = value.strings[value.strings.length - 1];
+          newValues.push(...value.values);
+      }
+      else {
+          strings.push(baseString);
+          newValues.push(value);
+      }
+  }
+  strings.push(endString + ')');
+  return new SqlString(strings, newValues);
+};
 
 export default qb;
