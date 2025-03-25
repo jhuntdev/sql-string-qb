@@ -1,6 +1,6 @@
 {
   "name": "sql-string-qb",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple JavaScript/TypeScript library for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.",
   "homepage": "https://github.com/jhuntdev/sql-string-qb",
   "keywords": [

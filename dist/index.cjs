@@ -1,7 +1,7 @@
 'use strict';
 
 /*!
-    Copyright (c) 2024 JHunt
+    Copyright (c) 2024-2025 JHunt
     Licensed under the MIT License (MIT)
     https://github.com/jhuntdev/sql-string-qb
 */
@@ -16,22 +16,30 @@ class SqlString {
         return this.sql;
     }
     get sql() {
-        return this.strings.join('?');
+        return addSemicolon(this.strings.join('?'));
     }
     get text() {
-        return this.strings.reduce((prev, curr, i) => prev + '$' + i + curr);
+        return addSemicolon(this.strings.reduce((prev, curr, i) => prev + '$' + i + curr));
     }
     get statement() {
-        return this.strings.reduce((prev, curr, i) => prev + ':' + i + curr);
+        return addSemicolon(this.strings.reduce((prev, curr, i) => prev + ':' + i + curr));
     }
     get query() {
-        return this.sql;
+        return addSemicolon(this.sql);
     }
     *[Symbol.iterator]() {
         yield this.sql;
         yield this.values;
     }
 }
+const addSemicolon = (finalString) => {
+    if (finalString && finalString[finalString.length - 1] !== ';') {
+        return finalString + ';';
+    }
+    else {
+        return finalString;
+    }
+};
 const append = (strings, newStrings) => {
     const stringsLength = strings.length;
     if (!newStrings.length) {
@@ -52,6 +60,16 @@ const append = (strings, newStrings) => {
         return newStrings;
     }
 };
+const escapeValue = (value) => {
+    if (typeof value === 'string' && value.search(/(?<!')'(?!')/) > -1) {
+        console.log('replaced a value: ' + value);
+        return value.replace(/(?<!')'(?!')/g, "''");
+    }
+    else {
+        return value;
+    }
+};
+const escapeValues = (values) => values.map((v) => escapeValue(v));
 const qb = (...args) => {
     let strings = [];
     const values = [];
@@ -75,7 +93,7 @@ const qb = (...args) => {
             throw new Error('Arguments should be strings or arrays');
         }
     }
-    return new SqlString(strings, values);
+    return new SqlString(strings, escapeValues(values));
 };
 qb.t = (strings, ...values) => {
     let newStrings = [];
@@ -107,7 +125,7 @@ qb.t = (strings, ...values) => {
     else {
         newStrings.push(strings[strings.length - 1]);
     }
-    return new SqlString(newStrings.map((s) => String(s)), newValues);
+    return new SqlString(newStrings.map((s) => String(s)), escapeValues(newValues));
 };
 qb.unescaped = (sql) => new SqlString([sql]);
 const keyValueList = (keyValues, prefix = '') => {
@@ -119,9 +137,9 @@ const keyValueList = (keyValues, prefix = '') => {
     for (let i = 0; i < keysLength; i++) {
         const key = keys[i];
         const value = keyValues[key];
-        const baseString = `${i === 0 ? (prefix ? prefix + ' ' : '') : endString + ', '}${key} = `;
+        const baseString = `${i === 0 ? (prefix ? prefix + ' ' : '') : endString + ', '}\`${key}\` = `;
         if (value instanceof SqlString) {
-            strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
+            strings.push(...[baseString + '`' + value.strings[0] + '`', ...value.strings.slice(1, value.strings.length - 2)]);
             endString = value.strings[value.strings.length - 1];
             values.push(...value.values);
         }
@@ -132,7 +150,7 @@ const keyValueList = (keyValues, prefix = '') => {
         }
     }
     strings.push(endString);
-    return new SqlString(strings, values);
+    return new SqlString(strings, escapeValues(values));
 };
 qb.set = (keyValues) => keyValueList(keyValues, 'SET');
 qb.values = (keyValueArray) => {
@@ -145,7 +163,7 @@ qb.values = (keyValueArray) => {
     let endString = '';
     for (let i = 0; i < array.length; i++) {
         if (i === 0) {
-            strings.push(`(${keys.join(', ')}) VALUES (`);
+            strings.push(`(${keys.map((key) => `\`${key}\``).join(', ')}) VALUES (`);
         }
         else {
             strings.push(endString + `), (`);
@@ -156,7 +174,7 @@ qb.values = (keyValueArray) => {
             const value = item[key];
             const baseString = j > 0 ? endString + ', ' : '';
             if (value instanceof SqlString) {
-                strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
+                strings.push(...[baseString + '`' + value.strings[0] + '`', ...value.strings.slice(1, value.strings.length - 2)]);
                 endString = value.strings[value.strings.length - 1];
                 values.push(...value.values);
             }
@@ -170,7 +188,7 @@ qb.values = (keyValueArray) => {
         }
     }
     strings.push(endString + ')');
-    return new SqlString(strings, values);
+    return new SqlString(strings, escapeValues(values));
 };
 qb.in = (values) => {
     const strings = [];
@@ -181,7 +199,7 @@ qb.in = (values) => {
         const baseString = i === 0 ? 'IN (' : endString + ', ';
         const value = values[i];
         if (value instanceof SqlString) {
-            strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
+            strings.push(...[baseString + '`' + value.strings[0] + '`', ...value.strings.slice(1, value.strings.length - 2)]);
             endString = value.strings[value.strings.length - 1];
             newValues.push(...value.values);
         }
@@ -191,7 +209,7 @@ qb.in = (values) => {
         }
     }
     strings.push(endString + ')');
-    return new SqlString(strings, newValues);
+    return new SqlString(strings, escapeValues(newValues));
 };
 
 module.exports = qb;

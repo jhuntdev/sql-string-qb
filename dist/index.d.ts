@@ -1,5 +1,5 @@
 /*!
-    Copyright (c) 2024 JHunt
+    Copyright (c) 2024-2025 JHunt
     Licensed under the MIT License (MIT)
     https://github.com/jhuntdev/sql-string-qb
 */
