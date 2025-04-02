@@ -72,8 +72,6 @@ const append = (strings: string[], newStrings: string[]) => {
 
 const escapeValue = (value:any) => {
   if (typeof value === 'string' && value.search(/(?<!')'(?!')/) > -1) {
-    // @ts-expect-error
-    console.log('replaced a value: ' + value)
     return value.replace(/(?<!')'(?!')/g, "''");
   } else {
     return value;

@@ -62,7 +62,6 @@ const append = (strings, newStrings) => {
 };
 const escapeValue = (value) => {
     if (typeof value === 'string' && value.search(/(?<!')'(?!')/) > -1) {
-        console.log('replaced a value: ' + value);
         return value.replace(/(?<!')'(?!')/g, "''");
     }
     else {
