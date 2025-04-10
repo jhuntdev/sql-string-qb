@@ -41,7 +41,7 @@ class SqlString {
     yield this.sql;
     yield this.values;
   }
-}
+};
 
 const addSemicolon = (finalString:string) => {
   if (finalString && finalString[finalString.length - 1] !== ';') {
@@ -49,7 +49,7 @@ const addSemicolon = (finalString:string) => {
   } else {
     return finalString;
   }
-}
+};
 
 const append = (strings: string[], newStrings: string[]) => {
   const stringsLength = strings.length;
@@ -70,17 +70,6 @@ const append = (strings: string[], newStrings: string[]) => {
   }
 };
 
-const escapeValue = (value:any) => {
-  if (typeof value === 'string' && value.search(/(?<!')'(?!')/) > -1) {
-    return value.replace(/(?<!')'(?!')/g, "''");
-  } else {
-    return value;
-  }
-};
-
-const escapeValues = (values:any[]) => values.map((v:any) => escapeValue(v));
-
-
 const qb = (...args: any[]): SqlString => {
   let strings: string[] = [];
   const values: any[] = [];
@@ -100,7 +89,7 @@ const qb = (...args: any[]): SqlString => {
       throw new Error('Arguments should be strings or arrays');
     }
   }
-  return new SqlString(strings, escapeValues(values));
+  return new SqlString(strings, values);
 };
 
 qb.t = (strings:TemplateStringsArray, ...values:any[]) => {
@@ -130,7 +119,7 @@ qb.t = (strings:TemplateStringsArray, ...values:any[]) => {
   } else {
     newStrings.push(strings[strings.length - 1]);
   }
-  return new SqlString(newStrings.map((s) => String(s)), escapeValues(newValues));
+  return new SqlString(newStrings.map((s) => String(s)), newValues);
 };
 
 qb.unescaped = (sql:string) => new SqlString([sql]);
@@ -157,7 +146,7 @@ const keyValueList = (keyValues:{[key:string]:any}, prefix:string = '') => {
     }
   }
   strings.push(endString);
-  return new SqlString(strings, escapeValues(values)); // [strings, values];
+  return new SqlString(strings, values); // [strings, values];
 };
 
 qb.set = (keyValues:{[key:string]:any}) => keyValueList(keyValues, 'SET');
@@ -196,7 +185,7 @@ qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]) => {
     }
   }
   strings.push(endString + ')');
-  return new SqlString(strings, escapeValues(values)); // [strings, values];
+  return new SqlString(strings, values); // [strings, values];
 };
 
 qb.in = (values:any[]) => {
@@ -218,7 +207,7 @@ qb.in = (values:any[]) => {
     }
   }
   strings.push(endString + ')');
-  return new SqlString(strings, escapeValues(newValues));
+  return new SqlString(strings, newValues);
 };
 
 export default qb;

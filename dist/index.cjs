@@ -60,15 +60,6 @@ const append = (strings, newStrings) => {
         return newStrings;
     }
 };
-const escapeValue = (value) => {
-    if (typeof value === 'string' && value.search(/(?<!')'(?!')/) > -1) {
-        return value.replace(/(?<!')'(?!')/g, "''");
-    }
-    else {
-        return value;
-    }
-};
-const escapeValues = (values) => values.map((v) => escapeValue(v));
 const qb = (...args) => {
     let strings = [];
     const values = [];
@@ -92,7 +83,7 @@ const qb = (...args) => {
             throw new Error('Arguments should be strings or arrays');
         }
     }
-    return new SqlString(strings, escapeValues(values));
+    return new SqlString(strings, values);
 };
 qb.t = (strings, ...values) => {
     let newStrings = [];
@@ -124,7 +115,7 @@ qb.t = (strings, ...values) => {
     else {
         newStrings.push(strings[strings.length - 1]);
     }
-    return new SqlString(newStrings.map((s) => String(s)), escapeValues(newValues));
+    return new SqlString(newStrings.map((s) => String(s)), newValues);
 };
 qb.unescaped = (sql) => new SqlString([sql]);
 const keyValueList = (keyValues, prefix = '') => {
@@ -149,7 +140,7 @@ const keyValueList = (keyValues, prefix = '') => {
         }
     }
     strings.push(endString);
-    return new SqlString(strings, escapeValues(values));
+    return new SqlString(strings, values);
 };
 qb.set = (keyValues) => keyValueList(keyValues, 'SET');
 qb.values = (keyValueArray) => {
@@ -187,7 +178,7 @@ qb.values = (keyValueArray) => {
         }
     }
     strings.push(endString + ')');
-    return new SqlString(strings, escapeValues(values));
+    return new SqlString(strings, values);
 };
 qb.in = (values) => {
     const strings = [];
@@ -208,7 +199,7 @@ qb.in = (values) => {
         }
     }
     strings.push(endString + ')');
-    return new SqlString(strings, escapeValues(newValues));
+    return new SqlString(strings, newValues);
 };
 
 module.exports = qb;
