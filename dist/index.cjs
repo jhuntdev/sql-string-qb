@@ -124,7 +124,7 @@ qb.t = (strings, ...values) => {
     else {
         newStrings.push(strings[strings.length - 1]);
     }
-    return new SqlString(newStrings.map((s) => String(s)), newValues);
+    return new SqlString(newStrings, newValues);
 };
 qb.unescaped = (sql) => new SqlString([sql]);
 const keyValueList = (keyValues, prefix = '') => {

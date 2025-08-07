@@ -127,7 +127,7 @@ qb.t = (strings:TemplateStringsArray, ...values:any[]) => {
   } else {
     newStrings.push(strings[strings.length - 1]);
   }
-  return new SqlString(newStrings.map((s) => String(s)), newValues);
+  return new SqlString(newStrings, newValues); // .map((s) => String(s))
 };
 
 qb.unescaped = (sql:string) => new SqlString([sql]);
