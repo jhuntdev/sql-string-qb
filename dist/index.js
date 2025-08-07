@@ -68,8 +68,17 @@ const qb = (...args) => {
             continue;
         }
         else if (Array.isArray(arg)) {
-            strings = append(strings, arg[0]);
-            values.push(...arg[1]);
+            if (Array.isArray(arg[0])) {
+                strings = append(strings, arg[0]);
+                values.push(...arg[1]);
+            }
+            else {
+                for (let j = 0; j < arg.length; i++) {
+                    const argJ = arg[j];
+                    strings = append(strings, argJ.strings);
+                    values.push(...argJ.values);
+                }
+            }
         }
         else if (typeof arg === 'object') {
             strings = append(strings, arg.strings);
