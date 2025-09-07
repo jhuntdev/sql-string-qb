@@ -1,4 +1,4 @@
-# SQL String QB🏈
+# SQL String QB 🏈
 
 ## A simple JavaScript/TypeScript library for assembling complex SQL queries. Miniscule, type-safe, and dependency-free.
 
@@ -8,7 +8,7 @@ _WARNING! Variables outside a `qb.t` function will go directly into the query an
 
 ## Installation
 
-Install SQL String QB🏈 from npm
+Install SQL String QB 🏈 from npm
 
 With npm:
 ```bash
