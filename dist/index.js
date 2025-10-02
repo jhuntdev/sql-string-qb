@@ -129,7 +129,7 @@ qb.unescaped = (sql) => new SqlString([sql]);
 const keyValueList = (keyValues, prefix = '') => {
     const strings = [];
     const values = [];
-    const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
+    const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key) && keyValues[key] !== undefined);
     const keysLength = keys.length;
     let endString = '';
     for (let i = 0; i < keysLength; i++) {
@@ -206,7 +206,9 @@ qb.in = (values) => {
             newValues.push(value);
         }
     }
-    strings.push(endString + ')');
+    if (valuesLength) {
+        strings.push(endString + ')');
+    }
     return new SqlString(strings, newValues);
 };
 export default qb;

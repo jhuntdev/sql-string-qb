@@ -132,11 +132,11 @@ qb.t = (strings:TemplateStringsArray, ...values:any[]) => {
 
 qb.unescaped = (sql:string) => new SqlString([sql]);
 
-const keyValueList = (keyValues:{[key:string]:any}, prefix:string = '') => {
+const keyValueList = (keyValues:{[key:string]:any}, prefix:string = ''):SqlString => {
   // PREFIX key1 = $0, key2 = $1
   const strings = [];
   const values = [];
-  const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
+  const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key) && keyValues[key] !== undefined);
   const keysLength = keys.length;
   let endString = '';
   for (let i = 0; i < keysLength; i++) {
@@ -157,9 +157,9 @@ const keyValueList = (keyValues:{[key:string]:any}, prefix:string = '') => {
   return new SqlString(strings, values); // [strings, values];
 };
 
-qb.set = (keyValues:{[key:string]:any}) => keyValueList(keyValues, 'SET');
+qb.set = (keyValues:{[key:string]:any}):SqlString => keyValueList(keyValues, 'SET');
 
-qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]) => {
+qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]):SqlString => {
   // (key1, key2) VALUES ($0, $1), ($2, $3)
   const strings = [];
   const values = [];
@@ -196,7 +196,7 @@ qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]) => {
   return new SqlString(strings, values); // [strings, values];
 };
 
-qb.in = (values:any[]) => {
+qb.in = (values:any[]):SqlString => {
   const strings = [];
   const newValues = [];
   const valuesLength = values.length;
@@ -214,7 +214,9 @@ qb.in = (values:any[]) => {
       newValues.push(value);
     }
   }
-  strings.push(endString + ')');
+  if (valuesLength) {
+    strings.push(endString + ')');
+  }
   return new SqlString(strings, newValues);
 };
 

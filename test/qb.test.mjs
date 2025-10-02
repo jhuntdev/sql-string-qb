@@ -30,7 +30,7 @@ const sqlString4 = qb(
     qb.in(['archived', 'draft']),
     qb.t`AND \`isHidden\` = ${false}`
 )
-const sqlString4b = qb.t`SELECT FROM \`tableName\` WHERE \`status\` ${qb.in(['archived', 'draft'])} AND \`isHidden\` = ${false};`
+const sqlString4b = qb.t`SELECT FROM \`tableName\` WHERE ${qb.t`\`status\` ${qb.in(['archived', 'draft'])}`} AND \`isHidden\` = ${false};`
 
 describe('SqlStringQB', () => {
     it('should work for general use', async () => {
