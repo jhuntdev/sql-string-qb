@@ -151,10 +151,10 @@ const keyValueList = (keyValues, prefix = '') => {
     return new SqlString(strings, values);
 };
 qb.set = (keyValues) => keyValueList(keyValues, 'SET');
-qb.values = (...keyValuesArray) => {
+qb.values = (firstArg, ...otherArgs) => {
     const strings = [];
     const values = [];
-    const array = Array.isArray(keyValuesArray) ? keyValuesArray : [keyValuesArray];
+    const array = Array.isArray(firstArg) ? firstArg : [firstArg, ...otherArgs];
     const keyValues = array[0];
     const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
     const keysLength = keys.length;
@@ -188,9 +188,10 @@ qb.values = (...keyValuesArray) => {
     strings.push(endString + ')');
     return new SqlString(strings, values);
 };
-qb.in = (...valuesArray) => {
+qb.in = (firstArg, ...otherArgs) => {
     const strings = [];
     const newValues = [];
+    const valuesArray = Array.isArray(firstArg) ? firstArg : [firstArg, ...otherArgs];
     const valuesLength = valuesArray.length;
     let endString = '';
     for (let i = 0; i < valuesLength; i++) {

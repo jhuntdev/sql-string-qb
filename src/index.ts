@@ -159,11 +159,11 @@ const keyValueList = (keyValues:{[key:string]:any}, prefix:string = ''):SqlStrin
 
 qb.set = (keyValues:{[key:string]:any}):SqlString => keyValueList(keyValues, 'SET');
 
-qb.values = (...keyValuesArray:{[key:string]:any}[]):SqlString => {
+qb.values = (firstArg:{[key:string]:any}|{[key:string]:any}[], ...otherArgs:{[key:string]:any}[]):SqlString => {
   // (key1, key2) VALUES ($0, $1), ($2, $3)
   const strings = [];
   const values = [];
-  const array = Array.isArray(keyValuesArray) ? keyValuesArray : [keyValuesArray];
+  const array = Array.isArray(firstArg) ? firstArg : [firstArg, ...otherArgs];
   const keyValues = array[0];
   const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
   const keysLength = keys.length;
@@ -196,9 +196,10 @@ qb.values = (...keyValuesArray:{[key:string]:any}[]):SqlString => {
   return new SqlString(strings, values); // [strings, values];
 };
 
-qb.in = (...valuesArray:any[]):SqlString => {
+qb.in = (firstArg:any, ...otherArgs:any[]):SqlString => {
   const strings = [];
   const newValues = [];
+  const valuesArray = Array.isArray(firstArg) ? firstArg : [firstArg, ...otherArgs]
   const valuesLength = valuesArray.length;
   let endString = '';
   for (let i = 0; i < valuesLength; i++) {

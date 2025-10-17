@@ -21,9 +21,13 @@ declare const qb: {
     set(keyValues: {
         [key: string]: any;
     }): SqlString;
-    values(...keyValuesArray: {
+    values(firstArg: {
+        [key: string]: any;
+    } | {
+        [key: string]: any;
+    }[], ...otherArgs: {
         [key: string]: any;
     }[]): SqlString;
-    in(...valuesArray: any[]): SqlString;
+    in(firstArg: any, ...otherArgs: any[]): SqlString;
 };
 export default qb;
