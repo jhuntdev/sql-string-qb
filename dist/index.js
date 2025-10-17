@@ -151,10 +151,10 @@ const keyValueList = (keyValues, prefix = '') => {
     return new SqlString(strings, values);
 };
 qb.set = (keyValues) => keyValueList(keyValues, 'SET');
-qb.values = (keyValueArray) => {
+qb.values = (...keyValuesArray) => {
     const strings = [];
     const values = [];
-    const array = Array.isArray(keyValueArray) ? keyValueArray : [keyValueArray];
+    const array = Array.isArray(keyValuesArray) ? keyValuesArray : [keyValuesArray];
     const keyValues = array[0];
     const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
     const keysLength = keys.length;
@@ -188,14 +188,14 @@ qb.values = (keyValueArray) => {
     strings.push(endString + ')');
     return new SqlString(strings, values);
 };
-qb.in = (values) => {
+qb.in = (...valuesArray) => {
     const strings = [];
     const newValues = [];
-    const valuesLength = values.length;
+    const valuesLength = valuesArray.length;
     let endString = '';
     for (let i = 0; i < valuesLength; i++) {
         const baseString = i === 0 ? 'IN (' : endString + ', ';
-        const value = values[i];
+        const value = valuesArray[i];
         if (value instanceof SqlString) {
             strings.push(...[baseString + '`' + value.strings[0] + '`', ...value.strings.slice(1, value.strings.length - 2)]);
             endString = value.strings[value.strings.length - 1];

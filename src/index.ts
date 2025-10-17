@@ -159,11 +159,11 @@ const keyValueList = (keyValues:{[key:string]:any}, prefix:string = ''):SqlStrin
 
 qb.set = (keyValues:{[key:string]:any}):SqlString => keyValueList(keyValues, 'SET');
 
-qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]):SqlString => {
+qb.values = (...keyValuesArray:{[key:string]:any}[]):SqlString => {
   // (key1, key2) VALUES ($0, $1), ($2, $3)
   const strings = [];
   const values = [];
-  const array = Array.isArray(keyValueArray) ? keyValueArray : [keyValueArray];
+  const array = Array.isArray(keyValuesArray) ? keyValuesArray : [keyValuesArray];
   const keyValues = array[0];
   const keys = Object.keys(keyValues).filter((key) => keyValues.hasOwnProperty(key));
   const keysLength = keys.length;
@@ -196,14 +196,14 @@ qb.values = (keyValueArray:{[key:string]:any}|{[key:string]:any}[]):SqlString =>
   return new SqlString(strings, values); // [strings, values];
 };
 
-qb.in = (values:any[]):SqlString => {
+qb.in = (...valuesArray:any[]):SqlString => {
   const strings = [];
   const newValues = [];
-  const valuesLength = values.length;
+  const valuesLength = valuesArray.length;
   let endString = '';
   for (let i = 0; i < valuesLength; i++) {
     const baseString = i === 0 ? 'IN (' : endString + ', ';
-    const value = values[i];
+    const value = valuesArray[i];
     if (value instanceof SqlString) {
       strings.push(...[baseString + '`' + value.strings[0] + '`', ...value.strings.slice(1, value.strings.length - 2)]);
       endString = value.strings[value.strings.length - 1];

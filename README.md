@@ -55,18 +55,30 @@ sequelize.query(query) // Uses query.query and query.values
 oracledb.execute(query) // Uses query.statement and query.values
 
 // Experimental Helper Functions
+
 qb.set({
     column_1: 'value 1',
     column_2: qb.unescaped('value 2')
-}) // => "SET `column_1` = ?, `column_2` = 'value 2'" ["value1"]
+})
+// "SET `column_1` = ?, `column_2` = 'value 2'"
+// ["value 1"]
+
 qb.values({
     column_1: 'value 1',
     column_2: qb.unescaped('value 2')
-}) // => "(`column_1`, `column_2`) VALUES (?, 'value 2')" ["value1"]
-qb.in([
+}, {
+    column_1: 'another value 1',
+    column_2: null
+})
+// "(`column_1`, `column_2`) VALUES (?, 'value 2'), (?, ?)"
+// ["value 1", "another value 1", null]
+
+qb.in(
     'value 1',
     qb.unescaped('value 2')
-]) // => "IN (?, 'value 2')" ["value1"]
+)
+// "IN (?, 'value 2')"
+// ["value 1"]
 ```
 
 ## License

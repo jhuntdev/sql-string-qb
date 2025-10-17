@@ -14,9 +14,9 @@ const sqlString = qb(
 
 const sqlString2 = qb(
     'INSERT INTO `tableName`',
-    qb.values([{ name: 'John', age: 25 }, { name: 'Mary', age: 40 }])
+    qb.values({ name: 'John', age: 25 }, { name: 'Mary', age: 40 })
 )
-const sqlString2b = qb.t`INSERT INTO \`tableName\` ${qb.values([{ name: 'John', age: 25 }, { name: 'Mary', age: 40 }])}`
+const sqlString2b = qb.t`INSERT INTO \`tableName\` ${qb.values({ name: 'John', age: 25 }, { name: 'Mary', age: 40 })}`
 
 const sqlString3 = qb(
     'UPDATE `tableName`',
@@ -27,10 +27,10 @@ const sqlString3b = qb.t`UPDATE \`tableName\` ${qb.set({ status: 'active', publi
 
 const sqlString4 = qb(
     'SELECT FROM `tableName` WHERE `status`',
-    qb.in(['archived', 'draft']),
+    qb.in('archived', 'draft'),
     qb.t`AND \`isHidden\` = ${false}`
 )
-const sqlString4b = qb.t`SELECT FROM \`tableName\` WHERE ${qb.t`\`status\` ${qb.in(['archived', 'draft'])}`} AND \`isHidden\` = ${false};`
+const sqlString4b = qb.t`SELECT FROM \`tableName\` WHERE ${qb.t`\`status\` ${qb.in('archived', 'draft')}`} AND \`isHidden\` = ${false};`
 
 describe('SqlStringQB', () => {
     it('should work for general use', async () => {
