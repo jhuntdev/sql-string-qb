@@ -136,9 +136,9 @@ const keyValueList = (keyValues, prefix = '') => {
     for (let i = 0; i < keysLength; i++) {
         const key = keys[i];
         const value = keyValues[key];
-        const baseString = `${i === 0 ? (prefix ? prefix + ' ' : '') : endString + ', '}\`${key}\` = `;
+        const baseString = `${i === 0 ? (prefix ? prefix + ' ' : '') : endString + ', '}${key} = `;
         if (value instanceof SqlString) {
-            strings.push(...[baseString + '`' + value.strings[0] + '`', ...value.strings.slice(1, value.strings.length - 2)]);
+            strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
             endString = value.strings[value.strings.length - 1];
             values.push(...value.values);
         }
@@ -162,7 +162,7 @@ qb.values = (firstArg, ...otherArgs) => {
     let endString = '';
     for (let i = 0; i < array.length; i++) {
         if (i === 0) {
-            strings.push(`(${keys.map((key) => `\`${key}\``).join(', ')}) VALUES (`);
+            strings.push(`(${keys.map((key) => `${key}`).join(', ')}) VALUES (`);
         }
         else {
             strings.push(endString + `), (`);
@@ -173,7 +173,7 @@ qb.values = (firstArg, ...otherArgs) => {
             const value = item[key];
             const baseString = j > 0 ? endString + ', ' : '';
             if (value instanceof SqlString) {
-                strings.push(...[baseString + '`' + value.strings[0] + '`', ...value.strings.slice(1, value.strings.length - 2)]);
+                strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
                 endString = value.strings[value.strings.length - 1];
                 values.push(...value.values);
             }
@@ -199,7 +199,7 @@ qb.in = (firstArg, ...otherArgs) => {
         const baseString = i === 0 ? 'IN (' : endString + ', ';
         const value = valuesArray[i];
         if (value instanceof SqlString) {
-            strings.push(...[baseString + '`' + value.strings[0] + '`', ...value.strings.slice(1, value.strings.length - 2)]);
+            strings.push(...[baseString + value.strings[0], ...value.strings.slice(1, value.strings.length - 2)]);
             endString = value.strings[value.strings.length - 1];
             newValues.push(...value.values);
         }

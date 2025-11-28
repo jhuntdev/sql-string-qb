@@ -30,22 +30,22 @@ const sortColumn = undefined
 const sortOrder = undefined
 
 const query = qb(
-    'SELECT `id`, `name`',
-    showPrice && ', `price`',
-    'FROM `products` WHERE',
-    category ? qb.t`\`category\` = ${category}` : '\`category\` IS NULL',
+    'SELECT id, name',
+    showPrice && ', price',
+    'FROM products WHERE',
+    category ? qb.t`category = ${category}` : 'category IS NULL',
     'ORDER BY',
-    sortColumn || '`createdAt`',
+    sortColumn || 'createdAt',
     sortOrder || 'DESC',
     'LIMIT 12'
 )
 
 typeof query     // => "object"
-query.toString() // => "SELECT `id`, `name` FROM `products` WHERE `category` = ? ORDER BY `createdAt` DESC LIMIT 12"
-query.sql        // => "SELECT `id`, `name` FROM `products` WHERE `category` = ? ORDER BY `createdAt` DESC LIMIT 12"
-query.query      // => "SELECT `id`, `name` FROM `products` WHERE `category` = ? ORDER BY `createdAt` DESC LIMIT 12"
-query.text       // => "SELECT `id`, `name` FROM `products` WHERE `category` = $1 ORDER BY `createdAt` DESC LIMIT 12"
-query.statement  // => "SELECT `id`, `name` FROM `products` WHERE `category` = :1 ORDER BY `createdAt` DESC LIMIT 12"
+query.toString() // => "SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12"
+query.sql        // => "SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12"
+query.query      // => "SELECT id, name FROM products WHERE category = ? ORDER BY createdAt DESC LIMIT 12"
+query.text       // => "SELECT id, name FROM products WHERE category = $1 ORDER BY createdAt DESC LIMIT 12"
+query.statement  // => "SELECT id, name FROM products WHERE category = :1 ORDER BY createdAt DESC LIMIT 12"
 query.values     // => ["sporting-goods"]
 
 pg.query(query) // Uses query.text and query.values
@@ -60,7 +60,7 @@ qb.set({
     column_1: 'value 1',
     column_2: qb.unescaped('value 2')
 })
-// "SET `column_1` = ?, `column_2` = 'value 2'"
+// "SET column_1 = ?, column_2 = 'value 2'"
 // ["value 1"]
 
 qb.values({
@@ -70,7 +70,7 @@ qb.values({
     column_1: 'another value 1',
     column_2: null
 })
-// "(`column_1`, `column_2`) VALUES (?, 'value 2'), (?, ?)"
+// "(column_1, column_2) VALUES (?, 'value 2'), (?, ?)"
 // ["value 1", "another value 1", null]
 
 qb.in(
