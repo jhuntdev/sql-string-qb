@@ -162,10 +162,10 @@ qb.values = (firstArg, ...otherArgs) => {
     let endString = '';
     for (let i = 0; i < array.length; i++) {
         if (i === 0) {
-            strings.push(`(${keys.map((key) => `${key}`).join(', ')}) VALUES (`);
+            strings.push(`(${keys.map((key) => key).join(', ')}) VALUES (`);
         }
         else {
-            strings.push(endString + `), (`);
+            strings.push(endString + '), (');
         }
         const item = array[i];
         for (let j = 0; j < keysLength; j++) {
